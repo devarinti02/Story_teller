@@ -1,0 +1,1 @@
+document.querySelector("#navbar").innerHTML=`<h1>"Welcome to Story teller"</h1>`
