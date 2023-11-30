@@ -1,0 +1,136 @@
+const storiesData = [
+    {
+      "smallStories": [
+        {
+          "title": "The Little Seed",
+          "content": "Once there was a little seed that dreamt of becoming a tall and strong tree. With determination and patience, it grew into a magnificent tree, providing shade and beauty to the world.",
+          "moral": "Dream big and be patient; your potential will grow with time."
+        },
+        // Add more small stories as needed
+      ]
+    },
+    {
+      "moralStories": [
+        {
+          "title": "The Enchanted Forest",
+          "content": "In a faraway land, there was an enchanted forest filled with magical creatures and hidden treasures. A brave adventurer named Lily embarked on a journey to discover the secrets of the forest, facing challenges and making new friends along the way.",
+          "moral": "Courage and friendship can turn any journey into a grand adventure."
+        },
+        // Add more moral stories as needed
+      ]
+    },
+    {
+      "bedtimeStories": [
+        {
+          "title": "The Moonlit Lullaby",
+          "content": "Under the silver moonlight, a little bunny named Benny listened to a gentle lullaby sung by the stars. As the night whispered its secrets, Benny drifted into a peaceful sleep, surrounded by the magic of the night sky.",
+          "moral": "Embrace the serenity of the night, and let your dreams dance with the stars."
+        },
+        {
+          "title": "The Magic Pillow",
+          "content": "Once upon a time, there was a magic pillow that could take its owner on incredible dream journeys. Every night, Sarah would embark on new adventures in her sleep, exploring fantastical lands and meeting extraordinary characters.",
+          "moral": "Imagination is the key to extraordinary dreams."
+        },
+        {
+          "title": "The Sleepy Forest Creatures",
+          "content": "In a quiet forest, all the creatures were preparing for bedtime. The owls hooted a lullaby, the crickets played a soothing melody, and even the trees whispered goodnight. The forest slept peacefully, embraced by the calming night.",
+          "moral": "Nature's lullaby brings tranquility to the world."
+        },
+        // Add more bedtime stories as needed
+      ]
+    }
+  ];
+  
+  function titles() {
+    let folderNames = '';
+  
+    for (const storyType of storiesData) {
+      const folderName = Object.keys(storyType)[0];
+      folderNames += `${folderName} `;
+    }
+  
+    // Remove the trailing comma and space
+    folderNames = folderNames.slice(0, -1);
+  
+    return { folderNames };
+  }
+  
+  function getStoryTitle(storyType) {
+    let storyNames = '';
+  
+    const storiesArray = storiesData.find(story => story[storyType]);
+    if (storiesArray) {
+      for (const story of storiesArray[storyType]) {
+        storyNames += `${story.title}, `;
+      }
+      storyNames = storyNames.slice(0, -2);
+    }
+  
+    return { storyNames };
+  }
+  
+  // Set the content of the element with the folder names
+  const titlesResult = titles();
+  document.getElementById('titles').textContent = `Folder Names: ${titlesResult.folderNames}`;
+  
+  // Assume you have a dropdown with id 'storyType'
+  const selectedStoryType = document.getElementById('storyType');
+  
+  // Get and display story titles
+  const storyTitleResult = getStoryTitle(selectedStoryType);
+  document.getElementById('stories').textContent = `Names: ${storyTitleResult.storyNames}`;
+  
+  function populateVoiceList() {
+    const voiceSelect = document.getElementById('voiceSelect');
+    const synthesis = window.speechSynthesis;
+  
+    synthesis.onvoiceschanged = function () {
+      const voices = synthesis.getVoices();
+  
+      for (let i = 0; i < voices.length; i++) {
+        const option = document.createElement('option');
+        option.value = voices[i];
+        option.textContent = `Voice ${i + 1}`;
+  
+        voiceSelect.appendChild(option);
+      }
+    };
+  }
+  
+  function speakText() {
+    const textToSpeak = document.getElementById('textToSpeak').value;
+    const voiceSelect = document.getElementById('voiceSelect');
+    const selectedVoice = voiceSelect.value;
+  
+    if ('speechSynthesis' in window) {
+      const synthesis = window.speechSynthesis;
+      synthesis.cancel();
+  
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  
+      if (selectedVoice) {
+        const voices = synthesis.getVoices();
+        const selectedVoiceObj = voices.find(
+          (voice) => voice.name === selectedVoice || voice.lang.includes('en-US')
+        );
+        utterance.voice = selectedVoiceObj;
+      }
+  
+      synthesis.speak(utterance);
+    } else {
+      alert(
+        'Speech synthesis is not supported in your browser. Please use a modern browser.'
+      );
+    }
+  }
+  
+  // Populate voice list on page load
+  populateVoiceList();
+  
+  function getStory() {
+    // const storyType = document.getElementById('storyType').value;
+    // const storyResult = storyTitle(storyType);
+    // document.getElementById('storyResult').textContent = `Story Titles: ${storyResult.storyNames}`;
+    console.log("hello")
+  }
+  
